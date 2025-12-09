@@ -1,5 +1,6 @@
 package com.SpringBootWithSecurity.API.with.JWT.service;
 
+import com.SpringBootWithSecurity.API.with.JWT.config.SecurityConfig;
 import com.SpringBootWithSecurity.API.with.JWT.model.UserPrincipal;
 import com.SpringBootWithSecurity.API.with.JWT.model.Users;
 import com.SpringBootWithSecurity.API.with.JWT.repo.UserRepo;
@@ -16,8 +17,12 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepo repo;
 
-    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    public void myUserDetailsService(SecurityConfig securityConfig)
+    {
+        this.passwordEncoder = securityConfig.passwordEncoder();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
