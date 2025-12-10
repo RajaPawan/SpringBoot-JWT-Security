@@ -4,6 +4,8 @@ package com.SpringBootWithSecurity.API.with.JWT.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +78,19 @@ public class JwtService {
                 .getExpiration();
 
         return exp.before(new Date());
+    }
+
+    public String getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                return ((UserDetails) principal).getUsername(); // Returns the username of the authenticated user
+            } else {
+                return principal.toString(); // If principal is just a username string (not UserDetails)
+            }
+        }
+        return null; // No authenticated user
     }
 //    public String extractUserName(String token) {
 //        return extractClaim(token,Claims::getSubject);
