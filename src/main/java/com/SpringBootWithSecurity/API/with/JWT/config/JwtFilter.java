@@ -35,6 +35,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader =request.getHeader("Authorization");
         String token = null;
         String username = null;
+        /*String authHeader = request.getHeader("JWT"); -- IF THEY MENTION LIKE  The JWT is included in the header with key JWT
+        and value as jwt token
+        if (authHeader != null) {
+        token = authHeader;   // directly the token
+        username = jwtService.extractUserName(token); }
+        */
 
         if(authHeader !=null && authHeader.contains("Bearer "))
         {
