@@ -19,6 +19,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private Users users;
+
     public void myUserDetailsService(SecurityConfig securityConfig)
     {
         this.passwordEncoder = securityConfig.passwordEncoder();
@@ -27,11 +30,6 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Users users = repo.findByUsername(username);
-        if(users==null)
-        {
-            throw new UsernameNotFoundException("User not found");
-        }
         // ⭐ 1. Check if password not encrypted
         if (!users.getPassword().startsWith("$2")) {
             // ⭐ 2. Encode
@@ -40,6 +38,13 @@ public class MyUserDetailsService implements UserDetailsService {
             // ⭐ 3. Save back to DB
             repo.save(users);
         }
+
+        Users users = repo.findByUsername(username);
+        if(users==null)
+        {
+            throw new UsernameNotFoundException("User not found");
+        }
+
         return new UserPrincipal(users);
     }
 }
